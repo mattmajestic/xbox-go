@@ -7,17 +7,11 @@ import (
 	"net/http"
 	"os"
 	"text/template"
-
-	"github.com/joho/godotenv"
 )
 
 var baseURL = "https://xbl.io/api/v2/"
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 
 	http.HandleFunc("/fetch", fetchHandler)
 	http.HandleFunc("/friends.json", friendsJSONHandler)
