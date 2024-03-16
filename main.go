@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -116,15 +117,21 @@ func chartHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse and execute the template
+	// Parse the template
 	tmpl, err := template.ParseFiles("static/chart.tmpl")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = tmpl.Execute(w, friends)
+
+	// Execute the template into a buffer
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, friends)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Write the buffer to the response
+	w.Write(buf.Bytes())
 }
